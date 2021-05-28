@@ -2,6 +2,7 @@ package com.taskfoundation.memorableplaces;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -28,7 +29,10 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener((parent, view, position, id) -> {
+            Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+            intent.putExtra("placeNumber", position);
 
+            startActivity(intent);
         });
     }
 }
