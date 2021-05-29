@@ -108,7 +108,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     @Override
-    public void onMapLongClick(@NonNull LatLng latLng) {
+    public void onMapLongClick(LatLng latLng) {
         Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
         String address = "";
         try {
