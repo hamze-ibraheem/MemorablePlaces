@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentActivity;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -28,6 +29,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.taskfoundation.memorableplaces.databinding.ActivityMapsBinding;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -56,7 +58,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void centerMapOnLocation(Location location, String title) {
         if (location != null) {
             LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-            mMap.clear();
+            //mMap.clear();
             mMap.addMarker(new MarkerOptions().position(userLocation).title(title));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12));
         }
@@ -142,6 +144,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         MainActivity.adapter.notifyDataSetChanged();
 
-        Toast.makeText(getApplicationContext(), "Location saved!", Toast.LENGTH_LONG).show();
+        SharedPreferences preferences = this.getSharedPreferences("com.taskfoundation.memorableplaces", Context.MODE_PRIVATE);
+
+        try {
+
+            ArrayList<String> latitudes = new ArrayList<>();
+            ArrayList<String> longitudes = new ArrayList<>();
+
+            for (LatLng coord : MainActivity.locations) {
+                latitudes.add(Double.toString(coord.latitude));
+                longitudes.add(Double.toString(coord.longitude));
+            }
+
+            preferences.edit().putString("places", ObjectSerializer.serialize(MainActivity.places)).apply();
+            preferences.edit().putString("lats", ObjectSerializer.serialize(latitudes)).apply();
+            preferences.edit().putString("lons", ObjectSerializer.serialize(longitudes)).apply();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //Toast.makeText(getApplicationContext(), "Location saved!", Toast.LENGTH_LONG).show();
     }
 }
